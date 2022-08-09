@@ -33,8 +33,11 @@ func menuNumCheck(_ menuNum: Int) {
 }
 func createRandomIntArray() -> [Int] {
     var randomIntArray: [Int] = []
-    for _ in 0...2{
-        randomIntArray.append(Int.random(in: 1...9))
+    while randomIntArray.count < 3{
+        let number = Int.random(in: 1...9)
+        if !randomIntArray.contains(number){
+            randomIntArray.append(number)
+        }
     }
     return randomIntArray
 }
@@ -54,16 +57,25 @@ func gameStart() {
         
         if inputValue.count < 5 {
             print("입력이 잘못되었습니다.")
-            startMenu()
+            gameStart()
         }
         
     let inputValArr = inputValue.split(separator: " ")
     for num in inputValArr {
-        inputIntArr.append(Int(num) ?? 0)
+        let intVal = Int(num) ?? -1
+        if inputIntArr.contains(intVal){
+            print("입력이 잘못되었습니다.")
+            gameStart()
+        }else if inputIntArr.contains(-1){
+            print("입력이 잘못되었습니다.")
+            gameStart()
+        } else{
+            inputIntArr.append(Int(num) ?? -1)
+        }
     }
     let result: Dictionary<String, Int> = winOrLoseCheck(inputIntArr, randomIntArray)
     print("\(result["s"]!) 스트라이크, \(result["b"]!) 볼")
-    if winOrLose == 0 {
+    if winOrLose == -1 {
         print("사용자 승리!")
     } else if leftCnt == 0{
         print("컴퓨터 승리!")
@@ -71,8 +83,10 @@ func gameStart() {
         print("남은 기회 : \(leftCnt)")
     }
     }
+    leftCnt = 9
     startMenu()
 }
+
 func winOrLoseCheck(_ human: [Int],_ computer: [Int]) -> Dictionary<String, Int> {
     var s_count: Int = 0
     var b_count: Int = 0
@@ -84,7 +98,7 @@ func winOrLoseCheck(_ human: [Int],_ computer: [Int]) -> Dictionary<String, Int>
         }
     }
     if s_count == 3 {
-        winOrLose = 0
+        winOrLose = -1
         leftCnt = -1
     }
     leftCnt -= 1
