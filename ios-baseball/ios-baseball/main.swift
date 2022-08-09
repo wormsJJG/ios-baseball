@@ -43,45 +43,45 @@ func createRandomIntArray() -> [Int] {
 }
 func gameStart() {
     while(leftCnt>=1 && winOrLose == 0){
-    print("숫자 3개를 띄어쓰기로 구분하여 입력해주세요.")
-    print("중복 숫자는 허용하지 않습니다.")
-    var inputIntArr: [Int] = []
-    let randomIntArray = createRandomIntArray()
+        print("숫자 3개를 띄어쓰기로 구분하여 입력해주세요.")
+        print("중복 숫자는 허용하지 않습니다.")
+        var inputIntArr: [Int] = []
+        let randomIntArray = createRandomIntArray()
         
         for r in randomIntArray {
             print(r)
         }
         
-    print("입력 :", terminator: " ")
-    let inputValue: String = readLine()!
+        print("입력 :", terminator: " ")
+        let inputValue: String = readLine()!
         
         if inputValue.count < 5 {
             print("입력이 잘못되었습니다.")
             gameStart()
         }
         
-    let inputValArr = inputValue.split(separator: " ")
-    for num in inputValArr {
-        let intVal = Int(num) ?? -1
-        if inputIntArr.contains(intVal){
-            print("입력이 잘못되었습니다.")
-            gameStart()
-        }else if inputIntArr.contains(-1){
-            print("입력이 잘못되었습니다.")
-            gameStart()
-        } else{
-            inputIntArr.append(Int(num) ?? -1)
+        let inputValArr = inputValue.split(separator: " ")
+        for num in inputValArr {
+            let intVal = Int(num) ?? -1
+            if inputIntArr.contains(intVal){
+                print("입력이 잘못되었습니다.")
+                gameStart()
+            }else if inputIntArr.contains(-1){
+                print("입력이 잘못되었습니다.")
+                gameStart()
+            } else{
+                inputIntArr.append(Int(num) ?? -1)
+            }
         }
-    }
-    let result: Dictionary<String, Int> = winOrLoseCheck(inputIntArr, randomIntArray)
-    print("\(result["s"]!) 스트라이크, \(result["b"]!) 볼")
-    if winOrLose == -1 {
-        print("사용자 승리!")
-    } else if leftCnt == 0{
-        print("컴퓨터 승리!")
-    } else{
-        print("남은 기회 : \(leftCnt)")
-    }
+        let result: Dictionary<String, Int> = winOrLoseCheck(inputIntArr, randomIntArray)
+        print("\(result["s"]!) 스트라이크, \(result["b"]!) 볼")
+        if winOrLose == -1 {
+            print("사용자 승리!")
+        } else if leftCnt == 0{
+            print("컴퓨터 승리!")
+        } else{
+            print("남은 기회 : \(leftCnt)")
+        }
     }
     leftCnt = 9
     startMenu()
