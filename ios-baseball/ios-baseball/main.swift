@@ -7,50 +7,66 @@
 
 import Foundation
 
-var menuNum: Int = 0
-var leftCnt: Int = 9
-var winOrLose: Int = 0
+var remainingCount: Int = 9
+var userSelectMenuNumber: Int = 0
 
-func startMenu() {
+func menu() {
     print("1. 게임시작")
     print("2. 게임종료")
     print("원하는 기능을 선택해주세요 :", terminator: " ")
-    menuNum = Int(readLine()!)!
-    menuNumCheck(menuNum)
+    
+    let inputMenuNumber = readLine()
+    
+    if let value = inputMenuNumber {
+        userSelectMenuNumber = Int(value) ?? -1
+    } else {
+        print("입력이 잘못되었습니다.")
+        menu()
+    }
+    
+    menuNumberCheck(userSelectMenuNumber)
 }
 
-func menuNumCheck(_ menuNum: Int) {
+func menuNumberCheck(_ menuNumber: Int) {
     
-    if menuNum == 1 {
+    if menuNumber == 1 {
+        remainingCount = 9
         gameStart()
-    } else if menuNum == 2 {
+    } else if menuNumber == 2 {
         print("게임종료")
     } else {
         print("입력이 잘못되었습니다.")
-        
-        startMenu()
+        menu()
     }
 }
-func createRandomIntArray() -> [Int] {
-    var randomIntArray: [Int] = []
+
+func generateRandomNumber() -> Set<Int> {
+    
+    var randomIntArray: Set<Int> = []
+    
     while randomIntArray.count < 3{
-        let number = Int.random(in: 1...9)
-        if !randomIntArray.contains(number){
-            randomIntArray.append(number)
-        }
+        randomIntArray.insert(Int.random(in: 1...9))
+//        let number = Int.random(in: 1...9)
+//        if !randomIntArray.contains(number) {
+//            randomIntArray.append(number)
+//        }
     }
     return randomIntArray
 }
 
 func gameStart() {
-    while(leftCnt>=1 && winOrLose == 0) {
+    while(remainingCount>=1) {
 //        print("숫자 3개를 띄어쓰기로 구분하여 입력해주세요.")
 //        print("중복 숫자는 허용하지 않습니다.")
-        var inputIntArr: [Int] = []
-        let randomIntArray = createRandomIntArray()
-        inputIntArr = createRandomIntArray()
+        let randomNumber = generateRandomNumber()
+        let inputNumber = generateRandomNumber()
 //        print("입력:", terminator: " ")
-        print("임의의 수 : \(inputIntArr[0]) \(inputIntArr[1]) \(inputIntArr[2])")
+        print("임의의 수 :", terminator: " ")
+        for number in inputNumber {
+            print(number, terminator: " ")
+        }
+        print("")
+        winLoseDicision(inputNumber, randomNumber)
 //        if inputValue.count < 5 {
 //            print("입력이 잘못되었습니다.")
 //            gameStart()
@@ -70,40 +86,41 @@ func gameStart() {
 //            }
 //        }
         
-        let result: Dictionary<String, Int> = winOrLoseCheck(inputIntArr, randomIntArray)
-        if leftCnt == 0{
-            print("남은 기회 : \(leftCnt)")
-            print("컴퓨터 승리...!")
-        }
-        print("\(result["s"]!) 스트라이크, \(result["b"]!) 볼")
-        if winOrLose == -1 {
-            print("사용자 승리!")
-        } else {
-            print("남은 기회 : \(leftCnt)")
-        }
     }
-    leftCnt = 9
+    
 //    startMenu()
 }
 
-func winOrLoseCheck(_ human: [Int],_ computer: [Int]) -> Dictionary<String, Int> {
-    var s_count: Int = 0
-    var b_count: Int = 0
-    for i in 0...2{
-        if human[i] == computer[i] {
-            s_count += 1
-        } else if computer.contains(human[i]) {
-            b_count += 1
+func winLoseDicision(_ human: Set<Int>,_ computer: Set<Int>){
+    
+    remainingCount -= 1
+    
+    var strikeCount: Int = 0
+    var ballCount: Int = 0
+    
+    for i in 0...2 {
+        if Array(human)[i] == Array(computer)[i] {
+            strikeCount += 1
+        } else if computer.contains(Array(computer)[i]) {
+            ballCount += 1
         }
     }
-    if s_count == 3 {
-        winOrLose = -1
-        leftCnt = -1
-    }
-    leftCnt -= 1
-    let dic: Dictionary<String, Int> = ["s": s_count, "b": b_count]
     
-    return dic
+    if strikeCount == 3 {
+        print("\(strikeCount) 스트라이크, \(ballCount) 볼")
+        print("사용자 승리!")
+//        menu()
+        remainingCount = 9
+    } else if remainingCount == 0 {
+        print("컴퓨터 승리")
+        print("\(strikeCount) 스트라이크, \(ballCount) 볼")
+        print("남은 기회: \(remainingCount)")
+    } else {
+        print("\(strikeCount) 스트라이크, \(ballCount) 볼")
+        print("남은 기회: \(remainingCount)")
+        gameStart()
+    }
+    
 }
 //startMenu()
 gameStart()
