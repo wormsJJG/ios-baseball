@@ -41,16 +41,13 @@ func createRandomIntArray() -> [Int] {
     }
     return randomIntArray
 }
+
 func gameStart() {
     while(leftCnt>=1 && winOrLose == 0){
         print("숫자 3개를 띄어쓰기로 구분하여 입력해주세요.")
         print("중복 숫자는 허용하지 않습니다.")
         var inputIntArr: [Int] = []
         let randomIntArray = createRandomIntArray()
-        
-        for r in randomIntArray {
-            print(r)
-        }
         
         print("입력 :", terminator: " ")
         let inputValue: String = readLine()!
@@ -73,7 +70,9 @@ func gameStart() {
                 inputIntArr.append(Int(num) ?? -1)
             }
         }
+        
         let result: Dictionary<String, Int> = winOrLoseCheck(inputIntArr, randomIntArray)
+        
         print("\(result["s"]!) 스트라이크, \(result["b"]!) 볼")
         if winOrLose == -1 {
             print("사용자 승리!")
